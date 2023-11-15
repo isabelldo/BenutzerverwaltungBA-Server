@@ -19,18 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.CookieValue;
-
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
+
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
 @Validated
@@ -40,19 +34,19 @@ public interface UsersApi {
         @SecurityRequirement(name = "oauth2", scopes = {
             "openid",
 "profile"        })    }, tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))) })
     @RequestMapping(value = "/users",
-        produces = { "application/json" }, 
+        produces = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<List<User>> usersGet();
+    ResponseEntity<List<User>> usersGet() throws IOException;
 
 
     @Operation(summary = "Delete user", description = "", security = {
         @SecurityRequirement(name = "oauth2", scopes = {
             "openid",
 "profile"        })    }, tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "User deleted successfully") })
     @RequestMapping(value = "/users/{id}",
         method = RequestMethod.DELETE)
@@ -63,12 +57,12 @@ public interface UsersApi {
         @SecurityRequirement(name = "oauth2", scopes = {
             "openid",
 "profile"        })    }, tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
-        
+
         @ApiResponse(responseCode = "404", description = "User not found") })
     @RequestMapping(value = "/users/{id}",
-        produces = { "application/json" }, 
+        produces = { "application/json" },
         method = RequestMethod.GET)
     ResponseEntity<List<User>> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") Integer id);
 
@@ -77,10 +71,10 @@ public interface UsersApi {
         @SecurityRequirement(name = "oauth2", scopes = {
             "openid",
 "profile"        })    }, tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User updated successfully") })
     @RequestMapping(value = "/users/{id}",
-        consumes = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.PATCH)
     ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") Integer id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
 
@@ -89,10 +83,10 @@ public interface UsersApi {
         @SecurityRequirement(name = "oauth2", scopes = {
             "openid",
 "profile"        })    }, tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "User updated successfully") })
     @RequestMapping(value = "/users/{id}",
-        consumes = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.PUT)
     ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") Integer id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
 
@@ -101,10 +95,10 @@ public interface UsersApi {
         @SecurityRequirement(name = "oauth2", scopes = {
             "openid",
 "profile"        })    }, tags={  })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "User created successfully") })
     @RequestMapping(value = "/users",
-        consumes = { "application/json" }, 
+        consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "Data of the new user", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
 
