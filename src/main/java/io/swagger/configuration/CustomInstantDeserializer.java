@@ -1,10 +1,10 @@
 package io.swagger.configuration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonTokenId;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.datatype.threetenbp.DecimalUtils;
 import com.fasterxml.jackson.datatype.threetenbp.deser.ThreeTenDateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.threetenbp.function.BiFunction;
@@ -28,10 +28,20 @@ import java.math.BigDecimal;
  *
  * @author Nick Williams
  */
-public class CustomInstantDeserializer<T extends Temporal>
-    extends ThreeTenDateTimeDeserializerBase<T> {
+public class CustomInstantDeserializer<T extends Temporal> extends ThreeTenDateTimeDeserializerBase<T> {
   private static final long serialVersionUID = 1L;
 
+  @Override
+  public CustomInstantDeserializer<T> withLeniency(Boolean leniency) {
+    return null;
+  }
+
+  @Override
+  protected ThreeTenDateTimeDeserializerBase<T> withShape(JsonFormat.Shape shape) {
+    return null;
+  }
+
+  ;
   public static final CustomInstantDeserializer<Instant> INSTANT = new CustomInstantDeserializer<Instant>(
       Instant.class, DateTimeFormatter.ISO_INSTANT,
       new Function<TemporalAccessor, Instant>() {
@@ -147,7 +157,7 @@ public class CustomInstantDeserializer<T extends Temporal>
   }
 
   @Override
-  protected JsonDeserializer<T> withDateFormat(DateTimeFormatter dtf) {
+  protected ThreeTenDateTimeDeserializerBase<T> withDateFormat(DateTimeFormatter dtf) {
     if (dtf == _formatter) {
       return this;
     }
