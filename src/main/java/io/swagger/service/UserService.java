@@ -3,6 +3,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import io.swagger.model.User;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Service
 public class UserService {
     private final MongoCollection<Document> userCollection;
+
     @Autowired
     public UserService(MongoCollection<Document> userCollection) {
         this.userCollection = userCollection;
@@ -64,7 +66,9 @@ public class UserService {
     private User convertDocumentToUser(Document userDocument) {
         User user = new User();
 
-        user.setId(userDocument.getInteger("id"));
+        ObjectId objectId = userDocument.getObjectId("_id");
+
+        user.setId(objectId);
         user.setFullName(userDocument.getString("fullName"));
         user.setUsername(userDocument.getString("username"));
         user.setEmail(userDocument.getString("email"));
@@ -78,7 +82,7 @@ public class UserService {
     public Document convertUserToDocument(User user) {
         Document userDocument = new Document();
 
-        userDocument.append("id", user.getId());
+        userDocument.append("_id", user.getId() != null ? new ObjectId(user.getId()) : null);
         userDocument.append("fullName", user.getFullName());
         userDocument.append("username", user.getUsername());
         userDocument.append("email", user.getEmail());

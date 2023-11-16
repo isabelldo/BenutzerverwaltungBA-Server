@@ -4,6 +4,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -16,8 +18,9 @@ import javax.validation.constraints.*;
 
 
 public class User   {
-  @JsonProperty("id")
-  private Integer id = null;
+  @Id //to use generated _id by MongoDB
+  @JsonProperty("_id")
+  private String id = null;
 
   @JsonProperty("username")
   private String username = null;
@@ -34,7 +37,7 @@ public class User   {
   @JsonProperty("fullName")
   private String fullName = null;
 
-  public User id(Integer id) {
+  public User id(String id) {
     this.id = id;
     return this;
   }
@@ -45,12 +48,13 @@ public class User   {
    **/
   @Schema(description = "")
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public String setId(ObjectId ObjectId) {
+    this.id = ObjectId != null ? ObjectId.toString() : null;
+    return id;
   }
 
   public User username(String username) {
