@@ -1,94 +1,75 @@
 package io.swagger.service;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
+import io.swagger.repository.UserRepository;
 import io.swagger.model.User;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserService {
-    private final MongoCollection<Document> userCollection;
+public abstract class UserService implements UserRepository {
+    private final UserRepository userRepository;
+    private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public UserService(MongoCollection<Document> userCollection) {
-        this.userCollection = userCollection;
+    public UserService(UserRepository userRepository, MongoTemplate mongoTemplate) {
+        this.userRepository = userRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
-    //gets all users from database as document
-    public List<User> getAllUsers() {
-        List<User> users = new ArrayList<>();
-
-        FindIterable<Document> userDocuments = userCollection.find();
-        for (Document userDocument : userDocuments) {
-            User user = convertDocumentToUser(userDocument);
-            users.add(user);
-        }
-        return users;
+    @Override
+    //gets all users
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
-    public Document createUser(User user) {
-        User newUser = new User();
-
-        if (user.getUsername() == null || user.getUsername().isEmpty()) {
-           throw new IllegalArgumentException("Please enter an username");
-        }
-        else if (user.getEmail() == null || user.getEmail().isEmpty())  {
-           throw new IllegalArgumentException("Please enter your E-Mail-Adress");
-        }
-        else if (user.getFullName() == null || user.getFullName().isEmpty()) {
-           throw new IllegalArgumentException("Please enter your full name");
-        }
-        else if(user.getPassword() == null || user.getPassword().isEmpty()) {
-           throw new IllegalArgumentException("Please enter a password");
-        }
-        else {
-            newUser.setUsername(user.getUsername());
-            newUser.setEmail(user.getEmail());
-            newUser.setFullName(user.getFullName());
-            newUser.setPassword(user.getPassword());
-        }
-
-        return convertUserToDocument(newUser);
-    }
-    public void updateUser(User user) {
-
-    }
-    public void deleteUser(User user) {
-
+    @Override
+    //gets one user by id
+    public Optional<User> findById(ObjectId id) {
+        return userRepository.findById(id);
     }
 
-    //changes document to users-object
-    private User convertDocumentToUser(Document userDocument) {
-        User user = new User();
-
-        ObjectId objectId = userDocument.getObjectId("_id");
-
-        user.setId(objectId);
-        user.setFullName(userDocument.getString("fullName"));
-        user.setUsername(userDocument.getString("username"));
-        user.setEmail(userDocument.getString("email"));
-        user.setPassword(userDocument.getString("password"));
-        user.setRole(userDocument.getString("role"));
-
-        return user;
+    @Override
+    public <specificUser extends User> specificUser save(specificUser user) {
+        return mongoTemplate.save(user);
     }
 
-    //changes users-object to document
-    public Document convertUserToDocument(User user) {
-        Document userDocument = new Document();
+    @Override
+    //deletes user by id
+    public void deleteById(ObjectId id) {
+        userRepository.deleteById(id);
+    }
 
-        userDocument.append("_id", user.getId() != null ? new ObjectId(user.getId()) : null);
-        userDocument.append("fullName", user.getFullName());
-        userDocument.append("username", user.getUsername());
-        userDocument.append("email", user.getEmail());
-        userDocument.append("password", user.getPassword());
-        userDocument.append("role", user.getRole());
+    public void updateEmail(ObjectId id, String email) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        Update update = new Update().set("email", email);
 
-        return userDocument;
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+
+    public void updatePassword(ObjectId id, String password) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        Update update = new Update().set("password", password);
+
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+
+    public void updateRole(ObjectId id, String role) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        Update update = new Update().set("role", role);
+
+        mongoTemplate.updateFirst(query, update, User.class);
+    }
+
+    public void updateFullName(ObjectId id, String fullName) {
+        Query query = new Query(Criteria.where("_id").is(id));
+        Update update = new Update().set("fullName", fullName);
+
+        mongoTemplate.updateFirst(query, update, User.class);
     }
 }
