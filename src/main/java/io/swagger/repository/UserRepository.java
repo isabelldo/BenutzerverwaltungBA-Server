@@ -11,9 +11,11 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     List<User> findAll();
 
     //gets a user by id
+    @Override
     Optional<User> findById(ObjectId id);
 
     //deletes one user
+    @Override
     void deleteById(ObjectId id);
 
     //saves user
