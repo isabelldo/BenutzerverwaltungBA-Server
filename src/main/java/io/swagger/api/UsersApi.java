@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
@@ -52,7 +50,7 @@ public interface UsersApi {
         @ApiResponse(responseCode = "204", description = "User deleted successfully") })
     @RequestMapping(value = "/users/{id}",
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") List<ObjectId> id);
+    ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") List<String> id);
 
 
     @Operation(summary = "Get one user", description = "", security = {
@@ -66,7 +64,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         produces = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<Optional<User>> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") ObjectId id);
+    ResponseEntity<List<User>> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") Integer id);
 
 
     @Operation(summary = "Update user", description = "", security = {
@@ -78,7 +76,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         consumes = { "application/json" },
         method = RequestMethod.PATCH)
-    ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") ObjectId id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
+    ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") Integer id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
 
 
     @Operation(summary = "Update user", description = "", security = {
@@ -90,7 +88,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{id}",
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") ObjectId id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
+    ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") Integer id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
 
 
     @Operation(summary = "Create user", description = "", security = {
