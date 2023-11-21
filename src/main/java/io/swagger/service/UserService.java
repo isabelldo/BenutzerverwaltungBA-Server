@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public abstract class UserService implements UserRepository {
+public class UserService {
     private final UserRepository userRepository;
     private final MongoTemplate mongoTemplate;
 
@@ -22,24 +22,23 @@ public abstract class UserService implements UserRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    @Override
     //gets all users
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    @Override
+
     //gets one user by id
     public Optional<User> findById(ObjectId id) {
         return userRepository.findById(id);
     }
 
-    @Override
+
     public <specificUser extends User> specificUser save(specificUser user) {
         return mongoTemplate.save(user);
     }
 
-    @Override
+
     //deletes user by id
     public void deleteById(ObjectId id) {
         userRepository.deleteById(id);

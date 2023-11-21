@@ -1,4 +1,4 @@
-package io.swagger.configuration;
+/*package io.swagger.configuration;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonParser;
@@ -9,6 +9,8 @@ import com.fasterxml.jackson.datatype.threetenbp.DecimalUtils;
 import com.fasterxml.jackson.datatype.threetenbp.deser.ThreeTenDateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.threetenbp.function.BiFunction;
 import com.fasterxml.jackson.datatype.threetenbp.function.Function;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.threeten.bp.DateTimeException;
 import org.threeten.bp.DateTimeUtils;
 import org.threeten.bp.Instant;
@@ -22,15 +24,16 @@ import org.threeten.bp.temporal.TemporalAccessor;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-/**
+*//**
  * Deserializer for ThreeTen temporal {@link Instant}s, {@link OffsetDateTime}, and {@link ZonedDateTime}s.
  * Adapted from the jackson threetenbp InstantDeserializer to add support for deserializing rfc822 format.
  *
  * @author Nick Williams
- */
+ *//*
+
+@Component
 public class CustomInstantDeserializer<T extends Temporal> extends ThreeTenDateTimeDeserializerBase<T> {
   private static final long serialVersionUID = 1L;
-
   @Override
   public CustomInstantDeserializer<T> withLeniency(Boolean leniency) {
     return null;
@@ -129,6 +132,7 @@ public class CustomInstantDeserializer<T extends Temporal> extends ThreeTenDateT
 
   protected final BiFunction<T, ZoneId, T> adjust;
 
+  @Autowired
   protected CustomInstantDeserializer(Class<T> supportedType,
                     DateTimeFormatter parser,
                     Function<TemporalAccessor, T> parsedToValue,
@@ -239,4 +243,4 @@ public class CustomInstantDeserializer<T extends Temporal> extends ThreeTenDateT
       this.zoneId = zoneId;
     }
   }
-}
+}*/

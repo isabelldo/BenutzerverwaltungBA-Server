@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User, ObjectId> {
+public interface UserRepository extends MongoRepository<User,ObjectId> {
 
     //gets all users
     List<User> findAll();
@@ -19,5 +19,5 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     void deleteById(ObjectId id);
 
     //saves user
-    <specificUser extends User> specificUser save(specificUser user);
+    <specificUser extends User> specificUser save( specificUser user);
 }

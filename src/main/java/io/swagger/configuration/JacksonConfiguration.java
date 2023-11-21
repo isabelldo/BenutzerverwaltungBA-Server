@@ -1,3 +1,4 @@
+/*
 package io.swagger.configuration;
 
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
@@ -10,7 +11,6 @@ import org.threeten.bp.ZonedDateTime;
 
 @Configuration
 public class JacksonConfiguration {
-
   @Bean
   @ConditionalOnMissingBean(ThreeTenModule.class)
   ThreeTenModule threeTenModule() {
@@ -21,3 +21,4 @@ public class JacksonConfiguration {
     return module;
   }
 }
+*/
