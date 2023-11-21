@@ -6,38 +6,47 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * User
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-16T10:27:40.080379021Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-16T10:27:40.080379021Z[GMT]")
 
-
+@Document("users")
 public class User   {
   @Id //to use generated _id by MongoDB
   @JsonProperty("_id")
-  private String id = null;
+  private ObjectId id;
 
   @JsonProperty("username")
-  private String username = null;
+  private String username;
 
   @JsonProperty("password")
-  private String password = null;
+  private String password;
 
   @JsonProperty("role")
-  private String role = null;
+  private String role;
 
   @JsonProperty("email")
-  private String email = null;
+  private String email;
 
   @JsonProperty("fullName")
-  private String fullName = null;
+  private String fullName;
 
-  public User id(String id) {
+  public User(String username, String password, String role, String email, String fullName) {
+    this.username = username;
+    this.password = password;
+    this.role = role;
+    this.email = email;
+    this.fullName = fullName;
+  }
+
+  public User id(ObjectId id) {
     this.id = id;
     return this;
   }
@@ -48,12 +57,12 @@ public class User   {
    **/
   @Schema(description = "")
 
-  public String getId() {
+  public ObjectId getId() {
     return id;
   }
 
-  public String setId(ObjectId ObjectId) {
-    this.id = ObjectId != null ? ObjectId.toString() : null;
+  public ObjectId setId(ObjectId ObjectId) {
+    this.id = ObjectId;
     return id;
   }
 

@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * GeneralError
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
 
 
 public class GeneralError   {
@@ -32,7 +32,7 @@ public class GeneralError   {
    * @return code
    **/
   @Schema(description = "")
-  
+
     public Integer getCode() {
     return code;
   }
@@ -51,7 +51,7 @@ public class GeneralError   {
    * @return message
    **/
   @Schema(description = "")
-  
+
     public String getMessage() {
     return message;
   }
@@ -83,7 +83,7 @@ public class GeneralError   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class GeneralError {\n");
-    
+
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
