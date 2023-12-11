@@ -2,7 +2,6 @@ package io.swagger.service;
 import io.swagger.model.UserModel;
 import io.swagger.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

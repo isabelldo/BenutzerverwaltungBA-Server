@@ -1,23 +1,12 @@
 package io.swagger.repository;
-import io.swagger.model.User;
-import org.bson.types.ObjectId;
+import io.swagger.model.UserModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import java.util.List;
+import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<User,ObjectId> {
-
-    //gets all users
-    List<User> findAll();
-
-    //gets a user by id
-    @Override
-    Optional<User> findById(ObjectId id);
-
-    //deletes one user
-    @Override
-    void deleteById(ObjectId id);
-
-    //saves user
-    <specificUser extends User> specificUser save( specificUser user);
+@Repository
+public interface UserRepository extends MongoRepository<UserModel, String> {
+    Optional<UserModel> findByUsername(String username);
+    Boolean existsByUsername(String username);
 }

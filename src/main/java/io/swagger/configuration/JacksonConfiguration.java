@@ -1,4 +1,3 @@
-/*
 package io.swagger.configuration;
 
 import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
@@ -21,4 +20,3 @@ public class JacksonConfiguration {
     return module;
   }
 }
-*/

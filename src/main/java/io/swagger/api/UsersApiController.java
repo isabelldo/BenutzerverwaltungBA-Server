@@ -1,21 +1,18 @@
 package io.swagger.api;
-import io.swagger.model.User;
+import io.swagger.model.UserModel;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,49 +31,73 @@ public class UsersApiController implements UsersApi {
         this.userService = userService;
     }
 
-    @Override
-    public ResponseEntity<List<User>> usersGet() throws IOException {
-        List<User> users = userService.findAll();
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users")
+    public ResponseEntity<List<UserModel>> usersGet() {
+
+                List<UserModel> userModels = userService.findAll();
+                if(userModels != null){
+                    return new ResponseEntity<>(userModels, HttpStatus.OK);
+                }
+                else {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+    ) {
+        try {
+            userService.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            log.error("Couldn't delete user with ID: " + id, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") List<ObjectId> id) {
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserModel> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+    ) {
+        try {
+            Optional<UserModel> user = userService.findById(id);
 
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    @Override
-    public ResponseEntity<Optional<User>> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") ObjectId id) {
-        Optional<User> users = userService.findById(id); // muss geändert werden
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            return new ResponseEntity<Optional<User>>(users, HttpStatus.OK);
+            return user.map(userModel -> new ResponseEntity<>(userModel, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (Exception e) {
+            log.error("Couldn't fetch user with ID: " + id, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") ObjectId id,@Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+            ,@Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
+    ) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @Override
-    public ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") ObjectId id,@Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/users/{id}")
+    public ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+            ,@Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
+    ) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @Override
-    public ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "Data of the new user", required=true, schema=@Schema()) @Valid @RequestBody List<User> body) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/users")
+    public ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "data of the new user", schema=@Schema()) @Valid @RequestBody UserModel body
+    ) {
+        try {
+            userService.save(body);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            log.error("Couldn't create user", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
 }

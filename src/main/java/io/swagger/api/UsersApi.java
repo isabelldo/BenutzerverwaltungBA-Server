@@ -5,7 +5,7 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.User;
+import io.swagger.model.UserModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,107 +22,98 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-
 
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
 @Validated
 public interface UsersApi {
 
-    @Operation(
-            summary = "Get all users",
-            description = "",
-            security = {
-                @SecurityRequirement(name = "oauth2", scopes = {"openid", "profile"})
-            },
-            tags={  }
-    )
+    @Operation(summary = "get all users", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
     @ApiResponses(value = {
-        @ApiResponse(
-                responseCode = "200",
-                description = "successful response",
-                content = @Content(
-                        mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class))))
-    })
-    @RequestMapping(value = "/users", produces = { "application/json" }, method = RequestMethod.GET)
-    ResponseEntity<List<User>> usersGet() throws IOException;
+            @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserModel.class)))),
+
+            @ApiResponse(responseCode = "400", description = "Bad request") })
+    @RequestMapping(value = "/users",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<List<UserModel>> usersGet();
 
 
-    @Operation(
-            summary = "Delete user",
-            description = "",
-            security = {
-                 @SecurityRequirement(name = "oauth2", scopes = {"openid", "profile"})
-            },
-            tags={  }
-    )
+    @Operation(summary = "delete user", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "User deleted successfully")
-    })
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
-    ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") List<ObjectId> id);
+            @ApiResponse(responseCode = "204", description = "user deleted successfully"),
+
+            @ApiResponse(responseCode = "401", description = "not authorized"),
+
+            @ApiResponse(responseCode = "404", description = "user not found") })
+    @RequestMapping(value = "/users/{id}",
+            method = RequestMethod.DELETE)
+    ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+    );
 
 
-    @Operation(
-            summary = "Get one user",
-            description = "",
-            security = {
-                @SecurityRequirement(name = "oauth2", scopes = {"openid", "profile"})
-            },
-            tags={  }
-    )
+    @Operation(summary = "get one user", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin", "UserModel" })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = User.class)))),
-        @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    @RequestMapping(value = "/users/{id}", produces = { "application/json" }, method = RequestMethod.GET)
-    ResponseEntity<Optional<User>> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") ObjectId id);
+            @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
+
+            @ApiResponse(responseCode = "404", description = "user not found") })
+    @RequestMapping(value = "/users/{id}",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    ResponseEntity<UserModel> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+    );
 
 
-    @Operation(
-            summary = "Update user",
-            description = "",
-            security = {
-                @SecurityRequirement(name = "oauth2", scopes = {"openid", "profile"})
-            },
-            tags={  }
-    )
+    @Operation(summary = "update user", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User updated successfully")
-    })
-    @RequestMapping(value = "/users/{id}", consumes = { "application/json" }, method = RequestMethod.PATCH)
-    ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") ObjectId id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
+            @ApiResponse(responseCode = "200", description = "user updated successfully"),
+
+            @ApiResponse(responseCode = "400", description = "bad request"),
+
+            @ApiResponse(responseCode = "401", description = "not authorized") })
+    @RequestMapping(value = "/users/{id}",
+            consumes = { "application/json" },
+            method = RequestMethod.PATCH)
+    ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+            , @Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
+    );
 
 
-    @Operation(
-            summary = "Update user",
-            description = "",
-            security = {
-                @SecurityRequirement(name = "oauth2", scopes = {"openid", "profile"})
-            },
-            tags={  }
-    )
+    @Operation(summary = "update user", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "User updated successfully")
-    })
-    @RequestMapping(value = "/users/{id}", consumes = { "application/json" }, method = RequestMethod.PUT)
-    ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "", required=true, schema=@Schema()) @PathVariable("id") ObjectId id, @Parameter(in = ParameterIn.DEFAULT, description = "Data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
+            @ApiResponse(responseCode = "200", description = "user updated successfully"),
+
+            @ApiResponse(responseCode = "400", description = "bad request"),
+
+            @ApiResponse(responseCode = "401", description = "not authorized") })
+    @RequestMapping(value = "/users/{id}",
+            consumes = { "application/json" },
+            method = RequestMethod.PUT)
+    ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+            , @Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
+    );
 
 
-    @Operation(
-            summary = "Create user",
-            description = "",
-            security = {
-                 @SecurityRequirement(name = "oauth2", scopes = {"openid", "profile"})
-            },
-            tags={  }
-    )
+    @Operation(summary = "create user", description = "", security = {
+            @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "User created successfully")
-    })
-    @RequestMapping(value = "/users", consumes = { "application/json" }, method = RequestMethod.POST)
-    ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "Data of the new user", required=true, schema=@Schema()) @Valid @RequestBody List<User> body);
+            @ApiResponse(responseCode = "201", description = "user created successfully"),
+
+            @ApiResponse(responseCode = "400", description = "bad request"),
+
+            @ApiResponse(responseCode = "401", description = "not authorized") })
+    @RequestMapping(value = "/users",
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "data of the new user", schema=@Schema()) @Valid @RequestBody UserModel body
+    );
+
 }
+
+
 
