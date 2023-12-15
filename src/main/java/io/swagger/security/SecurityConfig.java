@@ -20,17 +20,20 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig  {
 
     private JWTAuthEntrypoint authEntryPoint;
-    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/auth/**").authorizeHttpRequests(rmr -> rmr
-                .requestMatchers("/protected/**").hasRole("ADMIN")
-                .requestMatchers("/auth/**").permitAll()
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/users/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/**").permitAll()
+                        .anyRequest().authenticated()
         )
         .sessionManagement(smc -> smc
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        ).csrf(AbstractHttpConfigurer::disable);
+        ).csrf(AbstractHttpConfigurer::disable)
+        .exceptionHandling(ex -> ex
+                .authenticationEntryPoint(authEntryPoint)
+        );
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

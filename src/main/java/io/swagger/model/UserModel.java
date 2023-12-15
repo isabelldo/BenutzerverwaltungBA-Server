@@ -30,7 +30,7 @@ public class UserModel {
   @JsonProperty("password")
   private String password;
 
-  @DBRef(lazy = true)
+  @DBRef
   @JsonProperty("role")
   private List<Role> role;
 

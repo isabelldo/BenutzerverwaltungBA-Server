@@ -12,4 +12,9 @@ public class Role {
     @Id
     private String id;
     private String name;
+
+    @Override
+    public String toString() {
+        return "Role{name='" + name + "'}";
+    }
 }

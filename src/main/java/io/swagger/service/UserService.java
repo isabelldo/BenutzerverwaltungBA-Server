@@ -1,5 +1,7 @@
 package io.swagger.service;
+import io.swagger.model.Role;
 import io.swagger.model.UserModel;
+import io.swagger.repository.RoleRepository;
 import io.swagger.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Example;

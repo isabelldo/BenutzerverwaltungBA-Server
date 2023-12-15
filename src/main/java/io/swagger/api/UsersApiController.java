@@ -1,5 +1,7 @@
 package io.swagger.api;
+import io.swagger.model.Role;
 import io.swagger.model.UserModel;
+import io.swagger.repository.RoleRepository;
 import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -25,10 +27,13 @@ public class UsersApiController implements UsersApi {
     private final HttpServletRequest request;
     private final UserService userService;
 
+    private final RoleRepository roleRepository;
+
     @Autowired
-    public UsersApiController(HttpServletRequest request, UserService userService) {
+    public UsersApiController(HttpServletRequest request, UserService userService, RoleRepository roleRepository) {
         this.request = request;
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
