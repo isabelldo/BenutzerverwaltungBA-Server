@@ -6,6 +6,7 @@ import io.swagger.service.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,22 +22,20 @@ import java.util.Optional;
 
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 public class UsersApiController implements UsersApi {
 
     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
     private final HttpServletRequest request;
     private final UserService userService;
 
-    private final RoleRepository roleRepository;
 
     @Autowired
-    public UsersApiController(HttpServletRequest request, UserService userService, RoleRepository roleRepository) {
+    public UsersApiController(HttpServletRequest request, UserService userService) {
         this.request = request;
         this.userService = userService;
-        this.roleRepository = roleRepository;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users")
     public ResponseEntity<List<UserModel>> usersGet() {
 
@@ -77,29 +76,28 @@ public class UsersApiController implements UsersApi {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/users/{id}")
-    public ResponseEntity<Void> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+    public ResponseEntity<UserModel> usersIdPatch(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
             ,@Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
     ) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/users/{id}")
-    public ResponseEntity<Void> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
-            ,@Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
+    public ResponseEntity<UserModel> usersIdPut(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+            , @Parameter(in = ParameterIn.DEFAULT, description = "data to update user-informations", required=true, schema=@Schema()) @Valid @RequestBody UserModel body
     ) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/users")
-    public ResponseEntity<Void> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "data of the new user", schema=@Schema()) @Valid @RequestBody UserModel body
-    ) {
+    public ResponseEntity<UserModel> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "data of the new user", schema=@Schema()) @Valid @RequestBody UserModel body    ) {
         try {
-            userService.save(body);
-            return new ResponseEntity<Void>(HttpStatus.CREATED);
+            UserModel newUser = userService.save(body);
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Couldn't create user", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -29,14 +28,12 @@ public class JWTGenerator {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        String userRole = roles.contains("ADMIN") ? "ADMIN" : "USER";
-
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
         String token = Jwts.builder()
                 .setSubject(username)
-                .claim("role", userRole)
+                .claim("role", roles)
                 .setIssuedAt( new Date())
                 .setExpiration(expireDate)
                 .signWith(key,SignatureAlgorithm.HS512)
@@ -62,7 +59,6 @@ public class JWTGenerator {
                     .parseClaimsJws(token);
             System.out.println("validated");
             if (claims.getBody() != null && !claims.getBody().isEmpty()) {
-                System.out.println("validated2");
                 // Valid token
                 return true;
             } else {

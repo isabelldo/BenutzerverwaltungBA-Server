@@ -25,6 +25,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/auth")
 public class AuthController {
     private AuthenticationManager authenticationManager;
@@ -32,7 +33,6 @@ public class AuthController {
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
-    @CrossOrigin(origins = "http://localhost:8080/")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         if(userRepository.existsByUsername(registerDto.getUsername())) {
@@ -57,7 +57,6 @@ public class AuthController {
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:8080/")
     @PostMapping("login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
@@ -66,7 +65,6 @@ public class AuthController {
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = JWTGenerator.generateToken(authentication);
-        System.out.println("login" + token);
         return new ResponseEntity<>(new AuthResponseDto(token), HttpStatus.OK);
     }
 }

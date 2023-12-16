@@ -21,10 +21,12 @@ public class SecurityConfig  {
 
     private JWTAuthEntrypoint authEntryPoint;
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/**").hasRole("ADMIN")
+        http.authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/users/{id}").hasAuthority("ADMIN")
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
         )
@@ -34,7 +36,8 @@ public class SecurityConfig  {
         .exceptionHandling(ex -> ex
                 .authenticationEntryPoint(authEntryPoint)
         );
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http  //.addFilterBefore(apiOriginFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -48,6 +51,10 @@ public class SecurityConfig  {
         return new BCryptPasswordEncoder();
     }
 
+    /*@Bean
+    public ApiOriginFilter apiOriginFilter() {
+        return new ApiOriginFilter();
+    }*/
     @Bean
     public  JWTAuthenticationFilter jwtAuthenticationFilter() {
         return new JWTAuthenticationFilter();
