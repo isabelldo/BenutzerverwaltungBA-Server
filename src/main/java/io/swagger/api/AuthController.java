@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -48,16 +49,18 @@ public class AuthController {
         Optional<Role> roleOptional = roleRepository.findByName("USER");
         if (roleOptional.isPresent()) {
             Role userRole = roleOptional.get();
-            user.setRole(Collections.singletonList(userRole));
+            List<Role> role = new ArrayList<>();
+            role.add(userRole);
+            user.setRole(role);
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Standardrolle nicht gefunden");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Registrierung momentan nicht möglich");
         }
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }
 
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

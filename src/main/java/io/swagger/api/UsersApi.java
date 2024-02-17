@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,42 +21,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 @jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2023-10-13T12:32:13.695655691Z[GMT]")
 @Validated
 public interface UsersApi {
 
-        @Operation(summary = "get all users", description = "", security = {
-                @SecurityRequirement(name = "bearerAuth")}, tags={ "ADMIN" })
+        @Operation(summary = "", description = "get all users", security = {
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
         @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserModel.class)))),
+                @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
 
-                @ApiResponse(responseCode = "400", description = "Bad request") })
+                @ApiResponse(responseCode = "400", description = "Bad request"),
+
+                @ApiResponse(responseCode = "401", description = "not authorized") })
         @RequestMapping(value = "/users",
                 produces = { "application/json" },
                 method = RequestMethod.GET)
         ResponseEntity<List<UserModel>> usersGet();
 
 
-        @Operation(summary = "delete user", description = "", security = {
-                @SecurityRequirement(name = "bearerAuth")    }, tags={ "ADMIN" })
+        @Operation(summary = "", description = "delete user", security = {
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
         @ApiResponses(value = {
-                @ApiResponse(responseCode = "204", description = "user deleted successfully"),
+                @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
 
-                @ApiResponse(responseCode = "401", description = "not authorized"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
 
-                @ApiResponse(responseCode = "404", description = "user not found") })
+                @ApiResponse(responseCode = "401", description = "not authorized") })
         @RequestMapping(value = "/users/{id}",
+                produces = { "application/json" },
                 method = RequestMethod.DELETE)
-        ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+        ResponseEntity<UserModel> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
         );
 
 
-        @Operation(summary = "get one user", description = "", security = {
-                @SecurityRequirement(name = "bearerAuth")    }, tags={ "ADMIN", "USER" })
+        @Operation(summary = "", description = "get one user", security = {
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin", "User" })
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
+
+                @ApiResponse(responseCode = "401", description = "not authorized"),
 
                 @ApiResponse(responseCode = "404", description = "user not found") })
         @RequestMapping(value = "/users/{id}",
@@ -67,12 +72,12 @@ public interface UsersApi {
         );
 
 
-        @Operation(summary = "update user", description = "", security = {
-                @SecurityRequirement(name = "bearerAuth")    }, tags={ "ADMIN" })
+        @Operation(summary = "", description = "update user", security = {
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
         @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "user updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
+                @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
 
-                @ApiResponse(responseCode = "400", description = "bad request"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
 
                 @ApiResponse(responseCode = "401", description = "not authorized") })
         @RequestMapping(value = "/users/{id}",
@@ -84,12 +89,12 @@ public interface UsersApi {
         );
 
 
-        @Operation(summary = "update user", description = "", security = {
-                @SecurityRequirement(name = "bearerAuth")    }, tags={ "ADMIN" })
+        @Operation(summary = "", description = "update user", security = {
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
         @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "user updated successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
+                @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
 
-                @ApiResponse(responseCode = "400", description = "bad request"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
 
                 @ApiResponse(responseCode = "401", description = "not authorized") })
         @RequestMapping(value = "/users/{id}",
@@ -101,12 +106,12 @@ public interface UsersApi {
         );
 
 
-        @Operation(summary = "create user", description = "", security = {
-                @SecurityRequirement(name = "bearerAuth")    }, tags={ "ADMIN" })
+        @Operation(summary = "", description = "create user", security = {
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
         @ApiResponses(value = {
-                @ApiResponse(responseCode = "200", description = "user created successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
+                @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
 
-                @ApiResponse(responseCode = "400", description = "bad request"),
+                @ApiResponse(responseCode = "400", description = "Bad request"),
 
                 @ApiResponse(responseCode = "401", description = "not authorized") })
         @RequestMapping(value = "/users",

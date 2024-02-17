@@ -1,5 +1,6 @@
 package io.swagger.configuration;
 
+import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,12 +13,15 @@ public class SwaggerDocumentationConfig {
     @Bean
     public OpenAPI openApi() {
         return new OpenAPI()
-            .info(new Info()
-                .title("Rollenverwaltung-API")
-                .description("Eine rollenbasierte REST-API für die Benutzerverwaltung")
-                .termsOfService("")
-                .version("1.0.0")
-                .contact(new io.swagger.v3.oas.models.info.Contact()
-                    .email("")));
+                .info(new Info()
+                        .title("Benutzerverwaltung-API")
+                        .description("Eine rollenbasierte REST-API für die Benutzerverwaltung")
+                        .termsOfService("")
+                        .version("4.0.0")
+                        .license(new License()
+                                .name("")
+                                .url("http://unlicense.org"))
+                        .contact(new io.swagger.v3.oas.models.info.Contact()
+                                .email("")));
     }
 }

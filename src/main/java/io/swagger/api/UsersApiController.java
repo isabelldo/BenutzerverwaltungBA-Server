@@ -1,12 +1,12 @@
 package io.swagger.api;
-import io.swagger.model.Role;
+
 import io.swagger.model.UserModel;
-import io.swagger.repository.RoleRepository;
-import io.swagger.service.UserService;
+import io.swagger.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.apache.catalina.User;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,19 +26,20 @@ public class UsersApiController implements UsersApi {
 
     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
     private final HttpServletRequest request;
-    private final UserService userService;
+
+    private final UserRepository userRepository;
 
 
     @Autowired
-    public UsersApiController(HttpServletRequest request, UserService userService) {
+    public UsersApiController(HttpServletRequest request, UserRepository userRepository) {
         this.request = request;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/users")
     public ResponseEntity<List<UserModel>> usersGet() {
 
-                List<UserModel> userModels = userService.findAll();
+                List<UserModel> userModels = userRepository.findAll();
                 if(userModels != null){
                     return new ResponseEntity<>(userModels, HttpStatus.OK);
                 }
@@ -50,11 +50,11 @@ public class UsersApiController implements UsersApi {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
+    public ResponseEntity<UserModel> usersIdDelete(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
     ) {
         try {
-            userService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            userRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             log.error("Couldn't delete user with ID: " + id, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,7 +65,7 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserModel> usersIdGet(@Parameter(in = ParameterIn.PATH, description = "ID of user", required=true, schema=@Schema()) @PathVariable("id") String id
     ) {
         try {
-            Optional<UserModel> user = userService.findById(id);
+            Optional<UserModel> user = userRepository.findById(id);
 
             return user.map(userModel -> new ResponseEntity<>(userModel, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         } catch (Exception e) {
@@ -96,7 +96,7 @@ public class UsersApiController implements UsersApi {
     @PostMapping("/users")
     public ResponseEntity<UserModel> usersPost(@Parameter(in = ParameterIn.DEFAULT, description = "data of the new user", schema=@Schema()) @Valid @RequestBody UserModel body    ) {
         try {
-            UserModel newUser = userService.save(body);
+            UserModel newUser = userRepository.save(body);
             return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         } catch (Exception e) {
             log.error("Couldn't create user", e);
