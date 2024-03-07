@@ -28,7 +28,7 @@ public class SecurityConfig  {
                         .requestMatchers("/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/users/{id}").hasAuthority("ADMIN")
                         .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
         )
         .sessionManagement(smc -> smc
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

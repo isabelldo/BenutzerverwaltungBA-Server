@@ -1,6 +1,8 @@
 package io.swagger.configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,11 +15,18 @@ public class SwaggerDocumentationConfig {
     @Bean
     public OpenAPI openApi() {
         return new OpenAPI()
+                .components(new Components()
+                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .in(SecurityScheme.In.HEADER)
+                                .name("Authorization")))
                 .info(new Info()
                         .title("Benutzerverwaltung-API")
                         .description("Eine rollenbasierte REST-API für die Benutzerverwaltung")
                         .termsOfService("")
-                        .version("4.0.0")
+                        .version("2.0.0")
                         .license(new License()
                                 .name("")
                                 .url("http://unlicense.org"))
