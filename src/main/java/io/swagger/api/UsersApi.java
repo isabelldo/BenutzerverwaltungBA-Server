@@ -58,7 +58,7 @@ public interface UsersApi {
 
 
         @Operation(summary = "", description = "get one user", security = {
-                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin", "User" })
+                @SecurityRequirement(name = "bearerAuth")    }, tags={ "Admin" })
         @ApiResponses(value = {
                 @ApiResponse(responseCode = "200", description = "successful response", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserModel.class))),
 

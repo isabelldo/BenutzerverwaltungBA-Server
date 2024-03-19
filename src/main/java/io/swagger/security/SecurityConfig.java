@@ -27,7 +27,6 @@ public class SecurityConfig  {
         http.authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/users/{id}").hasAuthority("ADMIN")
-                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().permitAll()
         )
         .sessionManagement(smc -> smc

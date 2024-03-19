@@ -15,13 +15,6 @@ public class SwaggerDocumentationConfig {
     @Bean
     public OpenAPI openApi() {
         return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes("bearerAuth", new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")
-                                .in(SecurityScheme.In.HEADER)
-                                .name("Authorization")))
                 .info(new Info()
                         .title("Benutzerverwaltung-API")
                         .description("Eine rollenbasierte REST-API für die Benutzerverwaltung")
@@ -31,6 +24,14 @@ public class SwaggerDocumentationConfig {
                                 .name("")
                                 .url("http://unlicense.org"))
                         .contact(new io.swagger.v3.oas.models.info.Contact()
-                                .email("")));
+                                .email("")))
+
+                .components(new Components()
+                .addSecuritySchemes("bearerAuth", new SecurityScheme()
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
+                        .in(SecurityScheme.In.HEADER)
+                        .name("Authorization")));
     }
 }

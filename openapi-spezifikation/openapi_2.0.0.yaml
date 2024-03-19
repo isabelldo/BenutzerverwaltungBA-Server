@@ -1,0 +1,290 @@
+openapi: 3.0.3
+info:
+  title: Benutzerverwaltung-API
+  version: 2.0.0
+  description: Eine rollenbasierte REST-API für die Benutzerverwaltung
+servers:
+  - url: https://localhost:3000
+    description: Development server
+tags:
+  - name: Admin
+    description: Endpoint for admins
+  - name: User
+    description: Endpoints for regular users
+paths:
+  /users:
+    get:
+      description: get all users
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      description: create user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      requestBody:
+        description: data of the new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userModel'
+      responses:
+        '200':
+         $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  /users/{id}:
+    get:
+      description: get one user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    patch:
+      description: update user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: data to update user-informations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userModel'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      description: update user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: data to update user-informations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userModel'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      description: delete user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/register:
+    post:
+      description: register user
+      requestBody:
+        description: data of the new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/registerDto'
+      responses:
+        '200':
+         $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /auth/login:
+    post:
+      description: login user
+      requestBody:
+        description: data of the new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginDto'
+      responses:
+        '200':
+              description: successful response
+              content:
+                application/json:
+                  schema:
+                    $ref: '#components/schemas/authResponseDto'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  responses:
+    '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userModel'
+    '400':
+          description: bad request
+    '401':
+          description: not authorized
+    '404':
+          description: user not found
+    '500':
+          description: internal server error
+  schemas:
+    userModel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+          format: password
+        role:
+          type: array
+          items:
+            $ref: '#/components/schemas/role'
+        email:
+          type: string
+        fullName:
+          type: string
+      required:
+        - name
+        - password
+        - email
+        - fullName
+    role:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    registerDto:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+        email:
+          type: string
+        fullName:
+          type: string
+      required:
+        - username
+        - password
+        - email
+        - fullName
+    authResponseDto:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          default: "Bearer"
+      required:
+        - accessToken
+    loginDto:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+      required:
+        - username
+        - password
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []

@@ -1,0 +1,200 @@
+openapi: 3.0.3
+info:
+  title: Benutzerverwaltung-API
+  version: 1.0.0
+  description: Eine rollenbasierte REST-API für die Benutzerverwaltung
+servers:
+  - url: https://localhost:3000
+    description: Development server
+tags:
+  - name: Admin
+    description: Endpoint for admins
+  - name: User
+    description: Endpoints for regular users
+paths:
+  /users:
+    get:
+      description: get all users
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+    post:
+      description: create user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      requestBody:
+        description: data of the new user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userModel'
+      responses:
+        '200':
+         $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+  /users/{id}:
+    get:
+      description: get one user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+    patch:
+      description: update user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: data to update user-informations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userModel'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+    put:
+      description: update user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: data to update user-informations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userModel'
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '401':
+          $ref: '#/components/responses/401'
+    delete:
+      description: delete user
+      security:
+        - bearerAuth: []
+      tags:
+        - Admin
+      parameters:
+        - name: id
+          in: path
+          description: ID of user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/200'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+components:
+  responses:
+    '200':
+          description: successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userModel'
+    '400':
+          description: bad request
+    '401':
+          description: not authorized
+    '404':
+          description: user not found
+  schemas:
+    userModel:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
+          format: password
+        role:
+          type: array
+          items:
+            $ref: '#/components/schemas/role'
+        email:
+          type: string
+        fullName:
+          type: string
+      required:
+        - name
+        - password
+        - email
+        - fullName
+    role:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
